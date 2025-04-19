@@ -1,0 +1,25 @@
+services:
+  ragflow-knowledge-mcp-server:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      tags: [ ragflow-knowledge-mcp-server:0.1.0 ]
+      args:
+        - EXTRA_INDEX_URL=${EXTRA_INDEX_URL:-}
+        - EXTRA_INDEX_HOST=${EXTRA_INDEX_HOST:-}
+      network: host
+      no_cache: true
+    image: ragflow-knowledge-mcp-server:0.1.0
+    ports:
+      - "${SERVER_PORT:-41106}:41106"
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - RAGFLOW_KNOWLEDGE_MCP_SERVER_TRANSPORT=sse
+      - RAGFLOW_KNOWLEDGE_MCP_SERVER_SSE_DEBUG_ENABLED=True
+      - RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG=/root/config.yaml
+      - SIMP_LOGGER_LOG_LEVEL=${SIMP_LOGGER_LOG_LEVEL:-DEBUG}
+    volumes:
+      - ${CONFIG_FILE:-}:/root/config.yaml
