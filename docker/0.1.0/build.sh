@@ -71,7 +71,7 @@ fi
 
 tag_name=$(basename "$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)")
 tag_name=${tag_name//[!0-9a-zA-Z.-_]/-}
-docker build "${proxy_settings[@]}" "${other_settings[@]}" --no-cache=true -t ragflow-knowledge-mcp-server:"$tag_name" .
+docker build --network=host "${proxy_settings[@]}" "${other_settings[@]}" --no-cache=true -t ragflow-knowledge-mcp-server:"$tag_name" .
 result=$?
 
 exit $result

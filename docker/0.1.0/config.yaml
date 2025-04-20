@@ -1,7 +1,7 @@
 server-name: ragflow-knowledge-base
 
 default-base-url: http://192.168.1.100:9388/api/v1
-default-api-key: dataset-000000000000000000000000
+default-api-key: ragflow-00000000000000000000000000000000
 
 timeout: 60
 timeout-param-enabled: false
@@ -14,8 +14,8 @@ get-base-enabled: true
 
 datasets:
   - enabled: false
-    dataset-id: 00000000-0000-0000-0000-000000000000
-    search-tool-name: search_inspect_iot_knowledge
+    dataset-id: 00000000000000000000000000000000
+    search-tool-name: search_xxx_knowledge
     #search-tool-description: "Search knowledge about XXX(中文说明)."
     #search-tool-result: simple
     search-tool-description: "Search knowledge about XXX(中文说明). Results in JSON format, knowledge in the 'content' property."

@@ -13,7 +13,7 @@ Enable dynamic knowledge base searching tools in `config.yaml`, see also [Server
 
 ```yaml
 datasets:
-  - dataset-id: 00000000-0000-0000-0000-000000000000
+  - dataset-id: 00000000000000000000000000000000
     search-tool-name: search_xxx_knowledge
     #search-tool-description: "Search knowledge about XXX(中文说明)."
     #search-tool-result: simple
@@ -113,8 +113,8 @@ Example configurations `yaml`, for full configuration, see [MCPServerProperties.
 ```yaml
 server-name: ragflow-knowledge-base
 
-default-base-url: http://127.0.0.1:9880/v1
-default-api-key: dataset-000000000000000000000000
+default-base-url: http://127.0.0.1:9388/api/v1
+default-api-key: ragflow-00000000000000000000000000000000
 
 timeout: 60
 timeout-param-enabled: false
@@ -127,7 +127,7 @@ list-bases-enabled: false
 get-base-enabled: false
 
 datasets:
-  - dataset-id: 00000000-0000-0000-0000-000000000000
+  - dataset-id: 00000000000000000000000000000000
     search-tool-name: search_xxx_knowledge
     search-tool-description: "Search knowledge about XXX(中文说明). Results in JSON format, knowledge in the 'content' property."
 
@@ -150,15 +150,15 @@ transport: sse # Defaults to stdio
 sse-port: 41106
 
 list-bases-enabled: false
-list-bases-base-url: http://127.0.0.1:9880/v1
-list-bases-api-key: dataset-000000000000000000000000
+list-bases-base-url: http://127.0.0.1:9388/api/v1
+list-bases-api-key: ragflow-00000000000000000000000000000000
 
 get-base-enabled: false
 
 datasets:
-  - dataset-id: 00000000-0000-0000-0000-000000000000
-    base-url: http://127.0.0.1:9880/v1
-    api-key: dataset-000000000000000000000000
+  - dataset-id: 00000000000000000000000000000000
+    base-url: http://127.0.0.1:9388/api/v1
+    api-key: ragflow-00000000000000000000000000000000
     # Other properties...
 ```
 
