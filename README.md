@@ -94,14 +94,14 @@ uv run ragflow-knowledge-mcp-server --config=/path/to/config.yaml
 ### 2.4. Run with Docker or Docker Compose
 1. Docker
 
-* Export the `EXTRA_INDEX_URL` environment variable, then run [docker/0.1.0/build.sh](docker/0.1.0/build.sh) to build the image, moragflowing the build script as needed or building manually.
-* Then refer to [docker/0.1.0/run-in-docker.bat](docker/0.1.0/run-in-docker.bat) to run the container.
+   * Export the `EXTRA_INDEX_URL` environment variable, then run [docker/0.1.0/build.sh](docker/0.1.0/build.sh) to build the image, modifying the build script as needed or building manually.
+   * Then refer to [docker/0.1.0/run-in-docker.bat](docker/0.1.0/run-in-docker.bat) to run the container.
 
 2. Docker Compose
 
-* Moragflow the `.env` file.
-* Moragflow the `config.yaml` file.
-* Run [docker/0.1.0/docker-compose-up-d.bat](docker/0.1.0/docker-compose-up-d.bat) to start the container, moragflowing the startup script as needed or running manually.
+   * Modify the `.env` file.
+   * Modify the `config.yaml` file.
+   * Run [docker/0.1.0/docker-compose-up-d.bat](docker/0.1.0/docker-compose-up-d.bat) to start the container, modifying the startup script as needed or running manually.
 
 
 
