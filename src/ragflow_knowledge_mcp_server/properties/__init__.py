@@ -1,7 +1,7 @@
-from .Dataset import Dataset as RAGFlowKnowledgeMCPServerDataset
+from .Dataset import Dataset as MCPServerDataset
 from .MCPServerProperties import MCPServerProperties
 
 __all__ = [
-    "RAGFlowKnowledgeMCPServerDataset",
+    "MCPServerDataset",
     "MCPServerProperties"
 ]
