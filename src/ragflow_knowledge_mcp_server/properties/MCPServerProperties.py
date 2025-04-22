@@ -202,27 +202,35 @@ class MCPServerProperties:
     datasets: dict[str, Dataset] = {}
 
     def __init__(self):
-        log = get_logger()
-        log.info("MCPServerProperties created.")
+        pass
 
     def load(self, properties_path: str = None):
-        """Constructs a MCPServerProperties.
-        1. If properties_path is not provided, the yaml file path will be loaded from the environment variable RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG.
-        2. Read the properties from the yaml file if properties_path is provided.
-        3. Leave the properties as EMPTY if properties_path is not provided and the environment variable RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG is not set.
-        """
+        """Loads a MCPServerProperties."""
+
+        import os
 
         log = get_logger()
 
         # Check if properties_path is provided
+        by_env_var = False
         if properties_path is None:
-            import os
-            properties_path = os.getenv("RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG", "config.yaml")
+            default_path = "config.yaml" if os.path.exists("config.yaml") \
+                else os.path.join(os.path.expanduser("~"), ".config", "ragflow-knowledge-mcp-server", "config.yaml")
+            properties_path = os.getenv("RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG", default_path)
             if not properties_path:
                 log.error("Properties path not found in environment variable RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG.")
                 raise McpError(ErrorData(
                     code=404,
                     message="Properties path not found in environment variable RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG"))
+            by_env_var = True
+        # Check exists
+        if not os.path.exists(properties_path):
+            if by_env_var:
+                log.error(f"Properties file {properties_path} does not exist, please set the environment variable "
+                          f"RAGFLOW_KNOWLEDGE_MCP_SERVER_CONFIG to the path of the properties file.")
+            else:
+                log.error(f"Properties file {properties_path} does not exist.")
+            raise McpError(ErrorData(code=404, message=f"Properties file {properties_path} does not exist"))
 
         log.info(f"Loading properties from {properties_path}.")
 
@@ -235,6 +243,7 @@ class MCPServerProperties:
 
             # Extract properties from the loaded YAML
             if properties is None:
+                log.warning(f"Properties file {properties_path} is empty.")
                 return
 
             # Convert hyphen to underscore in keys

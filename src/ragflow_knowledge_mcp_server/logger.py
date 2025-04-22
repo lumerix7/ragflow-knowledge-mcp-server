@@ -74,12 +74,12 @@ def get_logger(name: str = "root",
     if log_file_enabled is None:
         log_file_enabled = _get_bool_env("SIMP_LOGGER_LOG_FILE_ENABLED", True)
     if not log_file_enabled:
-        stderr.write(f"Warning: configuration of logging to file is disabled for logger '{name}'.\n")
+        stderr.write(f"Warning: logging to file is disabled for logger '{name}'.\n")
 
     if log_console_enabled is None:
         log_console_enabled = _get_bool_env("SIMP_LOGGER_LOG_CONSOLE_ENABLED", True)
     if not log_console_enabled:
-        stderr.write(f"Warning: configuration of logging to console is disabled for logger '{name}'.\n")
+        stderr.write(f"Warning: logging to console is disabled for logger '{name}'.\n")
 
     # Early return if logging handlers are disabled
     if not log_file_enabled and not log_console_enabled:
@@ -144,26 +144,22 @@ def get_logger(name: str = "root",
         log.addHandler(file_handler)
 
         log_msg = (
-            f"File logging enabled. Name: {name}, Level: {log_level_str}, File: {log_file}, "
+            f"Logging to file enabled. Name: {name}, Level: {log_level_str}, File: {log_file}, "
             f"Rotation: {rotation_type}-based, "
             f"{f'max_bytes: {max_bytes}, ' if rotation_type == 'size' else f'when: {when}, interval: {interval}, '}"
             f"backups: {backup_count}."
         )
         log.info(log_msg)
         stderr.write(log_msg + "\n")
-    else:
-        stderr.write(f"Warning: Logging to file is disabled for logger '{name}'.\n")
 
     if log_console_enabled:
         console_handler = logging.StreamHandler(stderr)
         console_handler.setFormatter(formatter)
         log.addHandler(console_handler)
 
-        console_msg = f"Console logging enabled for {name}."
+        console_msg = f"Logging to console enabled for {name}."
         log.info(console_msg)
         stderr.write(console_msg + "\n")
-    else:
-        stderr.write(f"Warning: Logging to console is disabled for logger '{name}'.\n")
 
     _configured.add(name)
     return log

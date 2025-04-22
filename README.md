@@ -205,8 +205,6 @@ Example endpoint: `http://127.0.0.1:41106/sse`
 
 
 ### 4.2. stdio
-**⚠️ Note, for `stdio`, the `SIMP_LOGGER_LOG_CONSOLE_ENABLED` environment variable must be set to `false`.**`
-
 Simple command line:
 
 ```bash

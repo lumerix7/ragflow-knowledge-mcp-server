@@ -4,7 +4,6 @@ import asyncio
 import json
 import os
 import os.path
-from typing import Dict
 
 from . import RAGFlowError
 from .list_knowledge_bases_types import ListKnowledgeBasesResult, KnowledgeBase as GetKnowledgeBaseResult
@@ -20,7 +19,7 @@ _ragflow_code_dict = {
 
 
 class RAGFlowKnowledgeAPI:
-    _apis: Dict[str, 'RAGFlowKnowledgeAPI'] = {}
+    _apis: dict[str, 'RAGFlowKnowledgeAPI'] = {}
 
     # The default base API URL
     default_base_url: str

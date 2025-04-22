@@ -24,14 +24,14 @@ stop() {
 
 # Function to purge temporary and build files
 purge() {
-  rm -rfv $(find . -name build)
-  rm -rfv $(find . -name .venv)
-  rm -rfv $(find . -name uv.lock)
-  rm -rfv $(find . -name __pycache__)
-  rm -rfv $(find . -name .pytest_cache)
-  rm -rfv $(find . -name dist)
-  rm -rfv $(find . -name "*.egg-info")
-  rm -rfv $(find . -name _version.py)
+  rm -rf $(find . -name build)
+  rm -rf $(find . -name .venv)
+  rm -rf $(find . -name uv.lock)
+  rm -rf $(find . -name __pycache__)
+  rm -rf $(find . -name .pytest_cache)
+  rm -rf $(find . -name dist)
+  rm -rf $(find . -name "*.egg-info")
+  rm -rf $(find . -name _version.py)
   echo "Purge completed."
 }
 
@@ -74,7 +74,7 @@ on_reinstall_failure() {
 }
 
 reinstall() {
-  read -p "Reinstall $package? (y/n): " -r confirm
+  read -p "Reinstall $package? (y/N): " -r confirm
   if [[ "$confirm" != [yY] ]]; then
     echo "Operation cancelled."
     exit 1
