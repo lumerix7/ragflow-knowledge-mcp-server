@@ -4,6 +4,9 @@ A simple MCP server of knowledge base for RAGFlow.
 **Supported RAGFlow versions:**
 
 - 0.17.2
+- 0.18.0
+
+See also [infiniflow/ragflow/blob/main/mcp/server/server.py](https://github.com/infiniflow/ragflow/blob/main/mcp/server/server.py)
 
 
 
