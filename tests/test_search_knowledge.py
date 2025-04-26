@@ -4,7 +4,7 @@ import sys
 import unittest
 
 # Insert src root directory to sys.path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/src")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
 
 from ragflow_knowledge_mcp_server.logger import get_logger
 
@@ -21,7 +21,7 @@ class TestSearchKnowledge(unittest.TestCase):
         if False:
             api = get_api()
             properties = MCPServerProperties()
-            properties.load("D:\\data\\ragflow-knowledge-mcp-server\\config-stdio.yaml")
+            properties.load(os.path.join(os.path.expanduser("~"), ".config", "ragflow-knowledge-mcp-server", "config-stdio.yaml"))
 
             # Call the function and check the result
             result = asyncio.run(search_knowledge(properties=properties,
