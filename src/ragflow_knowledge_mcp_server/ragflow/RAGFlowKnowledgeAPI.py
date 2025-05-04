@@ -61,7 +61,7 @@ class RAGFlowKnowledgeAPI:
                 default_base_url: str = None,
                 default_api_key: str = None,
                 ) -> 'RAGFlowKnowledgeAPI':
-        """Get the RAGFlowKnowledgeAPI instance.
+        """Gets or creates a RAGFlowKnowledgeAPI
 
         Args:
             :param name: (str, optional):             The name of the API instance.
@@ -69,7 +69,7 @@ class RAGFlowKnowledgeAPI:
             :param default_api_key: (str, optional):  The default API key for authentication.
 
         Returns:
-            RAGFlowKnowledgeAPI instance.
+            Existing or created RAGFlowKnowledgeAPI.
         """
 
         api = cls._apis.get(name, None)
@@ -89,7 +89,7 @@ class RAGFlowKnowledgeAPI:
                               weights: float = 0.6,
                               score_threshold_enabled: bool = False,
                               score_threshold: float = 0.5,
-                              timeout: int | None = None,
+                              timeout: float | None = None,
                               ) -> RetrieveChunksResult:
         """Retrieves Chunks from a Knowledge Base.
 
@@ -229,6 +229,7 @@ class RAGFlowKnowledgeAPI:
                         log.debug(f"Retrieved chunks:\n"
                                   f"{result.model_dump_json(indent=2, exclude_none=True, exclude_unset=True)}.")
                         return result
+
                     if response.status == 404:
                         error_text = await response.text()
                         log.error(f"Dataset or RAGFlow API endpoint not found: url = {url}, "
@@ -256,7 +257,7 @@ class RAGFlowKnowledgeAPI:
                                    api_key: str = None,
                                    page: int | None = 1,
                                    limit: int | None = 20,
-                                   timeout: int | None = None,
+                                   timeout: float | None = None,
                                    ) -> ListKnowledgeBasesResult:
         """Lists knowledge bases.
 
@@ -331,6 +332,7 @@ class RAGFlowKnowledgeAPI:
                         log.debug(f"Got knowledge bases:\n"
                                   f"{result.model_dump_json(indent=2, exclude_none=True, exclude_unset=True)}.")
                         return result
+
                     if response.status == 404:
                         error_text = await response.text()
                         log.error(f"RAGFlow API endpoint not found: url = {url}, status = {response.status}, "
@@ -356,7 +358,7 @@ class RAGFlowKnowledgeAPI:
                                  dataset_id: str,
                                  base_url: str = None,
                                  api_key: str = None,
-                                 timeout: int | None = None,
+                                 timeout: float | None = None,
                                  ) -> GetKnowledgeBaseResult:
         """Gets knowledge base details(metadata and description) of  by knowledge base ID (dataset_id).
 
@@ -430,6 +432,7 @@ class RAGFlowKnowledgeAPI:
                         log.debug(f"Got knowledge base info:\n"
                                   f"{result.model_dump_json(indent=2, exclude_none=True, exclude_unset=True)}.")
                         return result
+
                     if response.status == 404:
                         error_text = await response.text()
                         log.error(f"Knowledge base ID '{dataset_id}' or RAGFlow API endpoint not found: url = {url}, "
@@ -463,4 +466,4 @@ class RAGFlowKnowledgeAPI:
 def get_api(name: str = 'default', default_base_url: str = None, default_api_key: str = None) -> 'RAGFlowKnowledgeAPI':
     """See RAGFlowKnowledgeAPI.get_api(...) for details."""
 
-    return RAGFlowKnowledgeAPI.get_api(name, default_base_url, default_api_key)
+    return RAGFlowKnowledgeAPI.get_api(name=name, default_base_url=default_base_url, default_api_key=default_api_key)

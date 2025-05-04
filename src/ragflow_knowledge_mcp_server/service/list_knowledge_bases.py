@@ -42,9 +42,9 @@ async def list_knowledge_bases(properties: MCPServerProperties,
     timeout = properties.timeout
     if properties.timeout_param_enabled:
         t = args.get("timeout", properties.timeout)
-        if t is not None and (not isinstance(t, int) or t < 1):
-            log.error(f"timeout should be a positive integer. Got: {t}.")
-            raise InvalidToolArgumentError(f"timeout should be a positive integer. Got: {t}")
+        if t is not None and (not isinstance(t, (int, float)) or t < 0.1):
+            log.error(f"timeout should be a positive number. Got: {t}.")
+            raise InvalidToolArgumentError(f"timeout should be a positive number. Got: {t}")
         timeout = t
 
     try:

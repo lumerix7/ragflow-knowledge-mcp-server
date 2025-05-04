@@ -94,6 +94,55 @@ def get_int_property(props: dict,
     return default_value
 
 
+def get_float_property(props: dict,
+                       prop_name: str,
+                       env_var_name: str | None = None,
+                       default_value: float | None = None,
+                       ) -> float | None:
+    """Gets a float property from the properties dictionary, environment variable, or default value.
+
+    The function first tries to get the property from the properties dictionary.
+    If not found or invalid, it tries to get it from an environment variable.
+    If still not found or invalid, it returns the default value.
+
+    Args:
+        :param props:         The dictionary containing properties.
+        :param prop_name:     The name of the property to retrieve.
+        :param env_var_name:  The environment variable name to check if the property isn't found in the dictionary.
+        :param default_value: The default value to return if the property isn't found in the dictionary or environment.
+
+    Returns:
+        The float property value, or None if not found and no default value provided.
+    """
+
+    value = props.get(prop_name, None)
+
+    if isinstance(value, (int, float)):
+        return float(value)
+
+    if value is not None:
+        value = None
+        value_str = (value if isinstance(value, str) else str(value)).strip()
+
+        if value_str:
+            try:
+                return float(value_str)
+            except ValueError:
+                pass
+
+    if env_var_name and env_var_name.strip():
+        import os
+        value_str = os.getenv(env_var_name)
+
+        if value_str and value_str.strip():
+            try:
+                return float(value_str.strip())
+            except ValueError:
+                pass
+
+    return default_value
+
+
 def get_bool_property(props: dict,
                       prop_name: str,
                       env_var_name: str | None = None,
@@ -161,8 +210,8 @@ class MCPServerProperties:
     # The default API key, default from environment variable DEFAULT_RAGFLOW_KNOWLEDGE_API_KEY.
     default_api_key: str = None
 
-    # The total timeout of one calling for MCP tool, default is 60 seconds.
-    timeout: int = 60
+    # The total timeout of one calling for MCP tool, default is 60.0 seconds.
+    timeout: float = 60.0
     # Whether to enable the MCP tool timeout parameter, default is False.
     timeout_param_enabled: bool = False
     # The description for total tool timeout parameter of one calling, default constructed based on timeout.
@@ -341,10 +390,10 @@ class MCPServerProperties:
             log.info(f"Default api key set to: {self.default_api_key}.")
 
         # Check tool timeout
-        timeout = get_int_property(props=properties,
-                                   prop_name='timeout',
-                                   env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_TIMEOUT')
-        if timeout is not None and timeout > 0:
+        timeout = get_float_property(props=properties,
+                                     prop_name='timeout',
+                                     env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_TIMEOUT')
+        if timeout is not None and timeout >= 0.1:
             self.timeout = timeout
             log.info(f"Tool timeout set to: {self.timeout}.")
         # Check tool timeout parameter

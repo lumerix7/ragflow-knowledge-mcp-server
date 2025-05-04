@@ -65,7 +65,7 @@ def serve(properties_path: str | None = None) -> None:
                 # Add timeout parameter if enabled
                 if properties.timeout_param_enabled:
                     tool_schema["properties"]["timeout"] = {
-                        "type": "integer",
+                        "type": "number",
                         "description": properties.timeout_param_description,
                     }
 
@@ -96,7 +96,7 @@ def serve(properties_path: str | None = None) -> None:
 
             if properties.timeout_param_enabled:
                 tool_schema["properties"]["timeout"] = {
-                    "type": "integer",
+                    "type": "number",
                     "description": properties.timeout_param_description,
                 }
 
@@ -121,7 +121,7 @@ def serve(properties_path: str | None = None) -> None:
 
             if properties.timeout_param_enabled:
                 tool_schema["properties"]["timeout"] = {
-                    "type": "integer",
+                    "type": "number",
                     "description": properties.timeout_param_description,
                 }
 
