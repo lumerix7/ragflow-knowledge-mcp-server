@@ -225,8 +225,8 @@ def serve(properties_path: str | None = None) -> None:
             raise e
         except Exception as e:
             import traceback
-            log.error(f"Error while calling tool service: {e}.\n{traceback.format_exc()}")
-            raise ToolExecutionError(message=f"Error while calling tool service: {e}", code=500)
+            log.error(f"Error calling tool service: {e}.\n{traceback.format_exc()}")
+            raise ToolExecutionError(message=f"Error calling tool service: {e}", code=500)
 
     async def call_list_knowledge_bases(args: dict) -> TextContent:
         """Calls the list knowledge bases tool with the given arguments.
@@ -248,8 +248,8 @@ def serve(properties_path: str | None = None) -> None:
             raise e
         except Exception as e:
             import traceback
-            log.error(f"Error while calling tool service: {e}.\n{traceback.format_exc()}")
-            raise ToolExecutionError(message=f"Error while calling tool service: {e}", code=500)
+            log.error(f"Error calling tool service: {e}.\n{traceback.format_exc()}")
+            raise ToolExecutionError(message=f"Error calling tool service: {e}", code=500)
 
     async def call_get_knowledge_base(args: dict) -> TextContent:
         """Calls the get knowledge base tool with the given arguments.
@@ -271,8 +271,8 @@ def serve(properties_path: str | None = None) -> None:
             raise e
         except Exception as e:
             import traceback
-            log.error(f"Error while calling tool service: {e}.\n{traceback.format_exc()}")
-            raise ToolExecutionError(message=f"Error while calling tool service: {e}", code=500)
+            log.error(f"Error calling tool service: {e}.\n{traceback.format_exc()}")
+            raise ToolExecutionError(message=f"Error calling tool service: {e}", code=500)
 
     # Start the server
     options = server.create_initialization_options()

@@ -248,8 +248,8 @@ class RAGFlowKnowledgeAPI:
             raise e
         except Exception as e:
             import traceback
-            log.error(f"Error while retrieving chunks from RAGFlow API: {str(e)}.\n{traceback.format_exc()}")
-            raise RAGFlowError(message=f"Error while retrieving chunks from RAGFlow API: {str(e)}", code=500)
+            log.error(f"Error retrieving chunks from RAGFlow API: {str(e)}.\n{traceback.format_exc()}")
+            raise RAGFlowError(message=f"Error retrieving chunks from RAGFlow API: {str(e)}", code=500)
 
     async def list_knowledge_bases(self,
                                    name_filter: str | None = None,
@@ -351,8 +351,8 @@ class RAGFlowKnowledgeAPI:
             raise e
         except Exception as e:
             import traceback
-            log.error(f"Error while listing knowledge bases from RAGFlow API: {str(e)}.\n{traceback.format_exc()}")
-            raise RAGFlowError(message=f"Error while listing knowledge bases from RAGFlow API: {str(e)}", code=500)
+            log.error(f"Error listing knowledge bases from RAGFlow API: {str(e)}.\n{traceback.format_exc()}")
+            raise RAGFlowError(message=f"Error listing knowledge bases from RAGFlow API: {str(e)}", code=500)
 
     async def get_knowledge_base(self,
                                  dataset_id: str,
@@ -456,10 +456,10 @@ class RAGFlowKnowledgeAPI:
             raise e
         except Exception as e:
             import traceback
-            log.error(f"Error while getting knowledge base with ID '{dataset_id}' from RAGFlow API: {str(e)}.\n"
+            log.error(f"Error getting knowledge base with ID '{dataset_id}' from RAGFlow API: {str(e)}.\n"
                       f"{traceback.format_exc()}")
             raise RAGFlowError(
-                message=f"Error while getting knowledge base with ID '{dataset_id}' from RAGFlow API: {str(e)}",
+                message=f"Error getting knowledge base with ID '{dataset_id}' from RAGFlow API: {str(e)}",
                 code=500)
 
 

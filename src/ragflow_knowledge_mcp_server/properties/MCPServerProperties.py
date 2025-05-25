@@ -117,8 +117,8 @@ def get_float_property(props: dict,
 
     value = props.get(prop_name, None)
 
-    if isinstance(value, (int, float)):
-        return float(value)
+    if isinstance(value, float):
+        return value
 
     if value is not None:
         value = None

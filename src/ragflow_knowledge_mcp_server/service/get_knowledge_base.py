@@ -57,8 +57,8 @@ async def get_knowledge_base(properties: MCPServerProperties,
             timeout=timeout,
         )
     except RAGFlowError as e:
-        log.error(f"Error while calling RAGFlow API: {e}.")
-        raise ToolAPIError(message=f"Error while calling RAGFlow API: {e}", code=e.code)
+        log.error(f"Error calling RAGFlow API: {e}.")
+        raise ToolAPIError(message=f"Error calling RAGFlow API: {e}", code=e.code)
 
     # Convert the base to GetKnowledgeBaseResult object
     from datetime import datetime

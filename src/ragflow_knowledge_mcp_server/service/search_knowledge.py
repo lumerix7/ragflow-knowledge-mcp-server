@@ -77,8 +77,8 @@ async def search_knowledge(properties: MCPServerProperties,
         )
     except RAGFlowError as e:
         import traceback
-        log.error(f"Error while calling RAGFlow API: {e}.\n{traceback.format_exc()}")
-        raise ToolAPIError(message=f"Error while calling RAGFlow API: {e}", code=e.code)
+        log.error(f"Error calling RAGFlow API: {e}.\n{traceback.format_exc()}")
+        raise ToolAPIError(message=f"Error calling RAGFlow API: {e}", code=e.code)
 
     if not chunks or not chunks.data or not chunks.data.chunks or len(chunks.data.chunks) < 1:
         log.error(f"No knowledge chunks found for query: {query}.")

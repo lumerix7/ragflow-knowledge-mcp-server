@@ -56,8 +56,8 @@ async def list_knowledge_bases(properties: MCPServerProperties,
             timeout=timeout,
         )
     except RAGFlowError as e:
-        log.error(f"Error while calling RAGFlow API: {e}.")
-        raise ToolAPIError(message=f"Error while calling RAGFlow API: {e}", code=e.code)
+        log.error(f"Error calling RAGFlow API: {e}.")
+        raise ToolAPIError(message=f"Error calling RAGFlow API: {e}", code=e.code)
 
     if not bases or not bases.data:
         log.error(f"No knowledge bases found for page: {page}, limit: {limit}.")
