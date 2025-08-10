@@ -50,7 +50,8 @@ classifiers = [
 ]
 
 # Optional dependencies
-#[project.optional-dependencies]
+[project.optional-dependencies]
+test = ["pytest>=8.4"]
 
 # Creating executable scripts
 [project.scripts]

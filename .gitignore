@@ -12,6 +12,14 @@ wheels/
 .python-version
 uv.lock
 _version.py
-.idea/
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+
+# Other
 *.log
 *.swp
+*.bak
