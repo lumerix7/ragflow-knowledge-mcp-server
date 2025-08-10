@@ -5,192 +5,7 @@ from yaml import YAMLError
 
 from .Dataset import Dataset
 from ..logger import get_logger
-
-
-def get_str_property(props: dict,
-                     prop_name: str,
-                     env_var_name: str | None = None,
-                     default_value: str | None = None,
-                     ) -> str | None:
-    """Gets a string property from the properties dictionary, environment variable, or default value.
-
-    The function first tries to get the property from the properties dictionary.
-    If not found or blank, it tries to get it from an environment variable.
-    If still not found or blank, it returns the default value.
-
-    Args:
-        :param props:         The dictionary containing properties.
-        :param prop_name:     The name of the property to retrieve.
-        :param env_var_name:  The environment variable name to check if the property isn't found in the dictionary.
-        :param default_value: The default value to return if the property isn't found in the dictionary or environment.
-
-    Returns:
-        The string property value, or None if not found and no default value provided.
-    """
-
-    value = props.get(prop_name, None)
-
-    if value is not None:
-        value_str = value if isinstance(value, str) else str(value)
-        if value_str.strip():
-            return value_str
-
-    if env_var_name and env_var_name.strip():
-        import os
-        value = os.getenv(env_var_name)
-
-        if value and value.strip():
-            return value
-
-    return default_value
-
-
-def get_int_property(props: dict,
-                     prop_name: str,
-                     env_var_name: str | None = None,
-                     default_value: int | None = None,
-                     ) -> int | None:
-    """Gets an integer property from the properties dictionary, environment variable, or default value.
-
-    The function first tries to get the property from the properties dictionary.
-    If not found or invalid, it tries to get it from an environment variable.
-    If still not found or invalid, it returns the default value.
-
-    Args:
-        :param props:         The dictionary containing properties.
-        :param prop_name:     The name of the property to retrieve.
-        :param env_var_name:  The environment variable name to check if the property isn't found in the dictionary.
-        :param default_value: The default value to return if the property isn't found in the dictionary or environment.
-
-    Returns:
-        The integer property value, or None if not found and no default value provided.
-    """
-
-    value = props.get(prop_name, None)
-
-    if isinstance(value, int):
-        return value
-
-    if value is not None:
-        value = None
-        value_str = (value if isinstance(value, str) else str(value)).strip()
-
-        if value_str:
-            try:
-                return int(value_str)
-            except ValueError:
-                pass
-
-    if env_var_name and env_var_name.strip():
-        import os
-        value_str = os.getenv(env_var_name)
-
-        if value_str and value_str.strip():
-            try:
-                return int(value_str.strip())
-            except ValueError:
-                pass
-
-    return default_value
-
-
-def get_float_property(props: dict,
-                       prop_name: str,
-                       env_var_name: str | None = None,
-                       default_value: float | None = None,
-                       ) -> float | None:
-    """Gets a float property from the properties dictionary, environment variable, or default value.
-
-    The function first tries to get the property from the properties dictionary.
-    If not found or invalid, it tries to get it from an environment variable.
-    If still not found or invalid, it returns the default value.
-
-    Args:
-        :param props:         The dictionary containing properties.
-        :param prop_name:     The name of the property to retrieve.
-        :param env_var_name:  The environment variable name to check if the property isn't found in the dictionary.
-        :param default_value: The default value to return if the property isn't found in the dictionary or environment.
-
-    Returns:
-        The float property value, or None if not found and no default value provided.
-    """
-
-    value = props.get(prop_name, None)
-
-    if isinstance(value, float):
-        return value
-
-    if value is not None:
-        value = None
-        value_str = (value if isinstance(value, str) else str(value)).strip()
-
-        if value_str:
-            try:
-                return float(value_str)
-            except ValueError:
-                pass
-
-    if env_var_name and env_var_name.strip():
-        import os
-        value_str = os.getenv(env_var_name)
-
-        if value_str and value_str.strip():
-            try:
-                return float(value_str.strip())
-            except ValueError:
-                pass
-
-    return default_value
-
-
-def get_bool_property(props: dict,
-                      prop_name: str,
-                      env_var_name: str | None = None,
-                      default_value: bool | None = None,
-                      ) -> bool | None:
-    """Gets a boolean property from the properties dictionary, environment variable, or default value.
-
-    The function first tries to get the property from the properties dictionary.
-    If not found or invalid, it tries to get it from an environment variable.
-    If still not found or invalid, it returns the default value.
-
-    Args:
-        :param props:         The dictionary containing properties.
-        :param prop_name:     The name of the property to retrieve.
-        :param env_var_name:  The environment variable name to check if the property isn't found in the dictionary.
-        :param default_value: The default value to return if the property isn't found in the dictionary or environment.
-
-    Returns:
-        The boolean property value, or None if not found and no default value provided.
-    """
-
-    value = props.get(prop_name, None)
-
-    if isinstance(value, bool):
-        return value
-
-    if value is not None:
-        if isinstance(value, str):
-            value_str = value.strip().lower()
-            if value_str in ['true', 'yes', '1', 'y', 'on']:
-                return True
-            elif value_str in ['false', 'no', '0', 'n', 'off']:
-                return False
-        elif isinstance(value, (int, float)):
-            return bool(value)
-
-    if env_var_name and env_var_name.strip():
-        import os
-        env_value = os.getenv(env_var_name)
-
-        if env_value is not None:
-            env_value = env_value.strip().lower()
-            if env_value in ['true', 'yes', '1', 'y', 'on']:
-                return True
-            elif env_value in ['false', 'no', '0', 'n', 'off']:
-                return False
-
-    return default_value
+from ..utils import get_str_property, get_int_property, get_float_property, get_bool_property
 
 
 class MCPServerProperties:
@@ -198,25 +13,25 @@ class MCPServerProperties:
 
     server_name: str = "RAGFlow Knowledge Base"
 
-    # The transport for MCP communication, default is stdio, available options are 'stdio', 'sse'.
+    # Transport type for MCP communication, default is stdio, available options are 'stdio', 'sse'.
     transport: str = "stdio"
     sse_transport_endpoint: str = "/messages/"
     sse_bind_host: str = "0.0.0.0"
     sse_port: int = 41106
     sse_debug_enabled: bool = True
 
-    # The default base URL, default from environment variable DEFAULT_RAGFLOW_KNOWLEDGE_BASE_URL.
+    # Default base URL, default from environment variable DEFAULT_RAGFLOW_KNOWLEDGE_BASE_URL.
     default_base_url: str = None
-    # The default API key, default from environment variable DEFAULT_RAGFLOW_KNOWLEDGE_API_KEY.
+    # Default API key, default from environment variable DEFAULT_RAGFLOW_KNOWLEDGE_API_KEY.
     default_api_key: str = None
 
-    # The total timeout of one calling for MCP tool, default is 60.0 seconds.
+    # Total timeout of one calling for MCP tool, default is 60.0 seconds.
     timeout: float = 60.0
     # Whether to enable the MCP tool timeout parameter, default is False.
     timeout_param_enabled: bool = False
-    # The description for total tool timeout parameter of one calling, default constructed based on timeout.
+    # Description for total tool timeout parameter of one calling, default constructed based on timeout.
     #
-    # NOTE: The parameter name always be 'timeout'.
+    # NOTE: Parameter name always be 'timeout'.
     #
     timeout_param_description: str = None
 
@@ -225,24 +40,24 @@ class MCPServerProperties:
     list_bases_name: str = "list_knowledge_bases"
     list_bases_description: str = "List knowledge bases."
     #
-    # NOTE: The parameter names always be 'page' and 'limit'.
+    # NOTE: Parameter names always be 'page' and 'limit'.
     #
-    list_bases_page_param_description: str = "The page number to list the bases for, optional, defaults to 1."
-    list_bases_limit_param_description: str = "The maximum number of knowledge bases to list, optional, defaults to 20."
+    list_bases_page_param_description: str = "Page number to list the bases for, optional, defaults to 1."
+    list_bases_limit_param_description: str = "Maximum number of knowledge bases to list, optional, defaults to 20."
     list_bases_base_url: str = None
     list_bases_api_key: str = None
 
     # Whether to enable the knowledge base(dataset) info getting MCP tool, default is False.
     get_base_enabled: bool = False
-    # The name of the knowledge base getting MCP tool, default is get_knowledge_base_info.
+    # Name of the knowledge base getting MCP tool, default is get_knowledge_base_info.
     get_base_name: str = "get_knowledge_base_info"
-    # The description of knowledge base getting MCP tool.
+    # Description of the knowledge base getting MCP tool.
     get_base_description: str = "Get information of the specified knowledge base ID, results including the knowledge base name, description, and other information."
-    # The description for knowledge_base_id parameter, default is "The ID of the knowledge base to get info."
+    # Description for knowledge_base_id parameter, default is "Knowledge base ID to get info."
     #
-    # NOTE: The parameter name always be 'knowledge_base_id'.
+    # NOTE: Parameter name always be 'knowledge_base_id'.
     #
-    get_base_param_description: str = "The ID of the knowledge base to get info."
+    get_base_param_description: str = "Knowledge base ID to get info."
 
     # Dataset dict, key is dataset_id, value is Dataset object.
     #
@@ -254,8 +69,6 @@ class MCPServerProperties:
         pass
 
     def load(self, properties_path: str = None):
-        """Loads a MCPServerProperties."""
-
         import os
 
         log = get_logger()
@@ -328,98 +141,83 @@ class MCPServerProperties:
     def _load_basic_properties(self, properties: dict):
         log = get_logger()
 
-        # Name
-        name = get_str_property(props=properties,
-                                prop_name='server_name',
+        name = get_str_property(props=properties, prop_name='server_name',
                                 env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_NAME')
         if name:
             self.server_name = name.strip()
             log.info(f"Server name set to: {self.server_name}.")
-        # Transport
-        transport = get_str_property(props=properties,
-                                     prop_name='transport',
+
+        transport = get_str_property(props=properties, prop_name='transport',
                                      env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_TRANSPORT')
         if transport and transport in ['stdio', 'sse']:
             self.transport = transport.strip()
             log.info(f"Transport set to: {self.transport}.")
 
-        # SSE
         if self.transport == 'sse':
             # SSE endpoint
-            endpoint = get_str_property(props=properties,
-                                        prop_name='sse_transport_endpoint',
+            endpoint = get_str_property(props=properties, prop_name='sse_transport_endpoint',
                                         env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_SSE_TRANSPORT_ENDPOINT')
             if endpoint:
                 self.sse_transport_endpoint = endpoint.strip()
                 log.info(f"SSE transport endpoint set to: {self.sse_transport_endpoint}.")
             # SSE bind host
-            host = get_str_property(props=properties,
-                                    prop_name='sse_bind_host',
+            host = get_str_property(props=properties, prop_name='sse_bind_host',
                                     env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_SSE_BIND_HOST')
             if host:
                 self.sse_bind_host = host.strip()
                 log.info(f"SSE bind host set to: {self.sse_bind_host}.")
             # SSE port
-            port = get_int_property(props=properties,
-                                    prop_name='sse_port',
+            port = get_int_property(props=properties, prop_name='sse_port',
                                     env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_SSE_PORT')
             if port is not None and 0 < port < 65536:
                 self.sse_port = port
                 log.info(f"SSE port set to: {self.sse_port}.")
             # SSE debug enabled
-            debug_enabled = get_bool_property(props=properties,
-                                              prop_name='sse_debug_enabled',
+            debug_enabled = get_bool_property(props=properties, prop_name='sse_debug_enabled',
                                               env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_SSE_DEBUG_ENABLED')
             if debug_enabled is not None:
                 self.sse_debug_enabled = debug_enabled
                 log.info(f"SSE debug enabled set to: {self.sse_debug_enabled}.")
 
-        # Default base url
-        default_base_url = get_str_property(props=properties,
-                                            prop_name='default_base_url',
+        default_base_url = get_str_property(props=properties, prop_name='default_base_url',
                                             env_var_name='DEFAULT_RAGFLOW_KNOWLEDGE_BASE_URL')
         if default_base_url:
             self.default_base_url = default_base_url.strip()
             log.info(f"Default base url set to: {self.default_base_url}.")
-        # Default api key
-        default_api_key = get_str_property(props=properties,
-                                           prop_name='default_api_key',
+
+        default_api_key = get_str_property(props=properties, prop_name='default_api_key',
                                            env_var_name='DEFAULT_RAGFLOW_KNOWLEDGE_API_KEY')
         if default_api_key and isinstance(default_api_key, str) and default_api_key.strip():
             self.default_api_key = default_api_key.strip()
             log.info(f"Default api key set to: {self.default_api_key}.")
 
         # Check tool timeout
-        timeout = get_float_property(props=properties,
-                                     prop_name='timeout',
+        timeout = get_float_property(props=properties, prop_name='timeout',
                                      env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_TIMEOUT')
         if timeout is not None and timeout >= 0.1:
             self.timeout = timeout
             log.info(f"Tool timeout set to: {self.timeout}.")
         # Check tool timeout parameter
-        param_enabled = get_bool_property(props=properties,
-                                          prop_name='timeout_param_enabled',
+        param_enabled = get_bool_property(props=properties, prop_name='timeout_param_enabled',
                                           env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_TIMEOUT_PARAM_ENABLED')
         if param_enabled:
             self.timeout_param_enabled = True
             log.info(f"Tool timeout parameter enabled set to: {self.timeout_param_enabled}.")
 
-            param_description = get_str_property(props=properties,
-                                                 prop_name='timeout_param_description',
+            param_description = get_str_property(props=properties, prop_name='timeout_param_description',
                                                  env_var_name='RAGFLOW_KNOWLEDGE_MCP_SERVER_TIMEOUT_PARAM_DESCRIPTION')
             if param_description and isinstance(param_description, str) and param_description.strip():
                 self.timeout_param_description = param_description.strip()
                 log.info(f"Tool timeout parameter description set to: {self.timeout_param_description}.")
             else:
-                self.timeout_param_description = f"The total timeout for one calling, in seconds, optional, defaults to {self.timeout} seconds."
+                self.timeout_param_description = f"Total timeout for one calling, in seconds, optional, defaults to {self.timeout} seconds."
         else:
             self.timeout_param_enabled = False
 
     def _load_list_bases_properties(self, properties: dict):
         log = get_logger()
 
-        tool_enabled = get_bool_property(props=properties,
-                                         prop_name='list_bases_enabled',
+        tool_enabled = get_bool_property(props=properties, prop_name='list_bases_enabled',
                                          default_value=self.list_bases_enabled)
         if not tool_enabled:
             log.info("List knowledge bases tool is disabled.")
@@ -432,25 +230,20 @@ class MCPServerProperties:
             self.list_bases_enabled = False
             return
 
-        tool_description = get_str_property(props=properties,
-                                            prop_name='list_bases_description',
+        tool_description = get_str_property(props=properties, prop_name='list_bases_description',
                                             default_value=self.list_bases_description)
         if not tool_description or not tool_description.strip():
             log.warning("List tool description is blank => not generate knowledge base list tool.")
             self.list_bases_enabled = False
             return
 
-        page_param_description = get_str_property(props=properties,
-                                                  prop_name='list_bases_page_param_description',
+        page_param_description = get_str_property(props=properties, prop_name='list_bases_page_param_description',
                                                   default_value=self.list_bases_page_param_description)
-        limit_param_description = get_str_property(props=properties,
-                                                   prop_name='list_bases_limit_param_description',
+        limit_param_description = get_str_property(props=properties, prop_name='list_bases_limit_param_description',
                                                    default_value=self.list_bases_limit_param_description)
-        base_url = get_str_property(props=properties,
-                                    prop_name='list_bases_base_url',
+        base_url = get_str_property(props=properties, prop_name='list_bases_base_url',
                                     default_value=self.list_bases_base_url)
-        api_key = get_str_property(props=properties,
-                                   prop_name='list_bases_api_key',
+        api_key = get_str_property(props=properties, prop_name='list_bases_api_key',
                                    default_value=self.list_bases_api_key)
 
         self.list_bases_enabled = True
@@ -486,20 +279,18 @@ class MCPServerProperties:
 
         tool_name = get_str_property(props=properties, prop_name='get_base_name', default_value=self.get_base_name)
         if not tool_name or not tool_name.strip():
-            log.warning("The name of base getting tool is blank => not generate knowledge base getting tool.")
+            log.warning("Knowledge base getting tool name is blank => not generate knowledge base getting tool.")
             self.get_base_enabled = False
             return
 
-        tool_description = get_str_property(props=properties,
-                                            prop_name='get_base_description',
+        tool_description = get_str_property(props=properties, prop_name='get_base_description',
                                             default_value=self.get_base_description)
         if not tool_description or not tool_description.strip():
-            log.warning("The description of base getting tool is blank => not generate knowledge base getting tool.")
+            log.warning("Knowledge base getting tool description is blank => not generate knowledge base getting tool.")
             self.get_base_enabled = False
             return
 
-        tool_param_description = get_str_property(props=properties,
-                                                  prop_name='get_base_param_description',
+        tool_param_description = get_str_property(props=properties, prop_name='get_base_param_description',
                                                   default_value=self.get_base_param_description)
 
         self.get_base_enabled = True
@@ -518,8 +309,8 @@ class MCPServerProperties:
     def _load_datasets(self, properties: dict):
         log = get_logger()
 
-        # datasets
         datasets_list = properties.get('datasets', [])
+
         if datasets_list:
             seen_tool_names = {}
 
