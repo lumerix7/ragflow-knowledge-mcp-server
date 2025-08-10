@@ -83,87 +83,70 @@ ensure_venv() {
     local rc=$?
     [ $rc -eq 0 ] || die "python -m venv failed (exit=$rc)"
   fi
-}
 
-ensure_pytest_in() {
-  local pybin="$1"
-  if "$pybin" -m pytest --version >/dev/null 2>&1; then
-    return 0
-  fi
-  log "pytest not found in $pybin; installing into venv..."
-  "$pybin" -m pip install -U pip >/dev/null 2>&1 || err "upgrade pip failed (ignored)"
-  "$pybin" -m pip install -U pytest
-  local rc=$?
-  [ $rc -eq 0 ] || die "install pytest failed (exit=$rc)"
-}
-
-run_pytest_with() {
-  local pybin="$1"
-  "$pybin" -m pytest --maxfail=1 -s
-  return $?
+  . "$VENV_DIR/bin/activate"
 }
 
 cmd_test() {
-  cd "$script_dir" || die "cd $script_dir failed"
+  cd "$script_dir" || die "Failed to change directory to $script_dir"
   ensure_venv
-  local vpy="$VENV_DIR/bin/python"
-  #ensure_pytest_in "$vpy"
-  #uv sync --no-install-project
   if command -v uv >/dev/null 2>&1; then
-    uv sync --no-install-project --extra test || die "uv sync failed"
+    uv sync --no-install-project --extra test || die "Failed to sync uv dependencies"
   else
     die "uv not found; install uv or use the 'extras' fallback"
   fi
-  run_pytest_with "$vpy"
+  python -m pytest --maxfail=1 -s
   local rc=$?
   cd "$orig_dir" || true
-  [ $rc -eq 0 ] || die "Tests failed"
+  [ $rc -eq 0 ] || die "Failed to run tests (exit=$rc)"
   log "Tests passed."
 }
 
 cmd_reinstall_system() {
+  cd "$script_dir" || die "Failed to change directory to $script_dir"
   ensure_py
-  cd "$script_dir" || die "cd $script_dir failed"
   stop
   log "Reinstalling $package into SYSTEM environment..."
-  "$PYTHON_BIN" -m pip uninstall -y "$package" >/dev/null 2>&1 || log "uninstall returned non-zero (ignored)."
+  "$PYTHON_BIN" -m pip uninstall -y "$package" || log "Uninstall returned non-zero (ignored)."
   log "pip install --upgrade . $*"
   "$PYTHON_BIN" -m pip install --upgrade . "$@"
   local rc=$?
   cd "$orig_dir" || true
-  [ $rc -eq 0 ] || die "pip install (system) failed"
+  [ $rc -eq 0 ] || die "Failed to install (system) (exit=$rc)"
   log "Reinstalled (system) successfully."
 }
 
 cmd_reinstall_venv() {
-  cd "$script_dir" || die "cd $script_dir failed"
+  cd "$script_dir" || die "Failed to change directory to $script_dir"
   stop
   ensure_venv
-  local vpy="$VENV_DIR/bin/python"
-  "$vpy" -m pip install -U pip
-  [ $? -eq 0 ] || die "upgrade pip failed"
-  "$vpy" -m pip uninstall -y "$package" >/dev/null 2>&1 || log "uninstall returned non-zero (ignored)."
-  log "$vpy -m pip install --upgrade . $*"
-  "$vpy" -m pip install --upgrade . "$@"
+  python -m pip install -U pip
+  [ $? -eq 0 ] || die "Failed to upgrade pip (ignored)."
+  python -m pip uninstall -y "$package" || log "Uninstall returned non-zero (ignored)."
+  log "python -m pip install --upgrade . $*"
+  python -m pip install --upgrade . "$@"
   local rc=$?
   cd "$orig_dir" || true
-  [ $rc -eq 0 ] || die "pip install (venv) failed"
+  [ $rc -eq 0 ] || die "Failed to install (venv) (exit=$rc)"
   log "Reinstalled (venv) successfully."
 }
 
 cmd_upload() {
   local repository="${1:-}"
+  shift || true
   if [ -z "$repository" ]; then
-    die "Usage: $(basename "$0") upload <repository>"
+    die "Usage: $(basename "$0") upload <repository> [extra-pip-args...]"
   fi
-  ensure_py
-  cd "$script_dir" || die "cd $script_dir failed"
+  cd "$script_dir" || die "Failed to change directory to $script_dir"
+  ensure_venv
   log "Preparing build tooling..."
-  "$PYTHON_BIN" -m pip install -U build twine >/dev/null 2>&1
-  [ $? -eq 0 ] || die "install build/twine failed"
-  run_or_die "Building $package..." "$PYTHON_BIN" -m build --sdist --wheel .
-  run_or_die "Uploading to repository: $repository" "$PYTHON_BIN" -m twine upload --repository "$repository" dist/*
-  cd "$orig_dir" || die "cd back failed"
+  # Allow caller to add/override packages or versions after the default list.
+  # Example: ./pytools.sh upload pypi 'build==1.2.2' 'twine==5.0.0'
+  python -m pip install -U build twine "$@"
+  [ $? -eq 0 ] || die "Failed to install build/twine (exit=$?)"
+  run_or_die "Building $package..." python -m build --sdist --wheel .
+  run_or_die "Uploading to repository: $repository" python -m twine upload --repository "$repository" dist/*
+  cd "$orig_dir" || die "Failed to change directory to $orig_dir"
   log "Uploaded $package to $repository successfully."
 }
 
@@ -182,7 +165,11 @@ Commands:
                                     Examples:
                                       $(basename "$0") reinstall-venv
                                       $(basename "$0") reinstall-venv --no-build-isolation ".[dev]"
-  upload <repository>               Build (sdist+wheel) and upload via twine to the named repository (e.g. pypi, testpypi).
+  upload <repository> [extra-pip-args...]  Build (sdist+wheel) and upload via twine to the named repository (e.g. pypi, testpypi).
+                                    Pass extra args to 'pip install' after the default list.
+                                    Examples:
+                                      $(basename "$0") upload pypi
+                                      $(basename "$0") upload testpypi 'build==1.2.2' 'twine==5.0.0'
 
 Env vars:
   PYTHON_BIN   Python command to use (default: python3)

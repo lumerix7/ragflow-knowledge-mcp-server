@@ -1,5 +1,12 @@
 # ragflow-knowledge-mcp-server
+**Project Overview:**
+
 A simple MCP server of knowledge base for RAGFlow.
+
+This project is a Python-based MCP (Model Context Protocol) server for RAGFlow knowledge bases.
+It provides a set of tools to interact with RAGFlow, allowing users to search for knowledge, list available knowledge bases, and retrieve information about specific knowledge bases.
+The server is built using the `mcp` library and can be configured to use either `stdio` or `sse` for transport.
+The server is configured through a YAML file (`config.yaml`) and environment variables.
 
 **Supported RAGFlow versions:** 0.17.2 ~ 0.19.0
 
@@ -71,7 +78,7 @@ cd /path/to/project
 pip install .
 
 # Or install using pytools.sh
-./pytools.sh reinstall
+./pytools.sh reinstall-system
 ```
 
 
@@ -80,13 +87,13 @@ pip install .
 export SIMP_LOGGER_LOG_FILE=/path/to/mcp.log
 export SIMP_LOGGER_LOG_LEVEL=DEBUG
 
-# Run server directly
+# This server can be run directly from the command line:
 ragflow-knowledge-mcp-server --config=/path/to/config.yaml
 
-# Or run with python
+# Alternatively, it can be run as a Python module:
 python -m ragflow_knowledge_mcp_server --config=/path/to/config.yaml
 
-# Or run with uv
+# This server can also be run using `uv`:
 uv run ragflow-knowledge-mcp-server --config=/path/to/config.yaml
 ```
 
@@ -95,14 +102,25 @@ uv run ragflow-knowledge-mcp-server --config=/path/to/config.yaml
 1. Docker
 
    * Export the `EXTRA_INDEX_URL` environment variable, then run [docker/0.1.0/build.sh](docker/0.1.0/build.sh) to build the image, modifying the build script as needed or building manually.
-   * Then refer to [docker/0.1.0/run-in-docker.bat](docker/0.1.0/run-in-docker.bat) to run the container.
+   * Then refer to [docker/0.1.0/run-in-docker.sh](docker/0.1.0/run-in-docker.sh) to run the container.
 
 2. Docker Compose
 
    * Modify the `.env` file.
    * Modify the `config.yaml` file.
-   * Run [docker/0.1.0/docker-compose-up-d.bat](docker/0.1.0/docker-compose-up-d.bat) to start the container, modifying the startup script as needed or running manually.
+   * Run [docker/0.1.0/docker-compose-up-d.sh](docker/0.1.0/docker-compose-up-d.sh) to start the container, modifying the startup script as needed or running manually.
 
+
+### 2.4. Testing
+```bash
+# The project uses `pytest` for testing. To run the tests, first install the test dependencies:
+python -m venv .venv
+. .venv/bin/activate
+uv sync --no-install-project --extra test
+
+# Then run pytest:
+pytest
+```
 
 
 ## 3. Server configurations
@@ -247,3 +265,12 @@ ragflow-knowledge-base:
     SIMP_LOGGER_LOG_FILE: /path/to/mcp.log
     SIMP_LOGGER_LOG_LEVEL: DEBUG
 ```
+
+
+
+## 5. Development Conventions
+- The project follows the standard Python packaging conventions.
+- The code is organized into modules within the `src/ragflow_knowledge_mcp_server` directory.
+- The server logic is in `server.py`, configuration properties are defined in `properties/MCPServerProperties.py`, and the services for interacting with the RAGFlow API are in the `service` directory.
+- The project uses `setuptools` for building and `setuptools_scm` for versioning.
+- The project uses [`simp-logger`](src/ragflow_knowledge_mcp_server/logger.py) for logging, which can be configured through environment variables.
