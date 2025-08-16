@@ -95,7 +95,7 @@ cmd_test() {
   else
     die "uv not found; install uv or use the 'extras' fallback"
   fi
-  python -m pytest --maxfail=1 -s
+  python -m pytest --maxfail=1 -s "$@"
   local rc=$?
   cd "$orig_dir" || true
   [ $rc -eq 0 ] || die "Failed to run tests (exit=$rc)"
@@ -155,7 +155,7 @@ show_help() {
 Usage: $(basename "$0") <command> [args...]
 
 Commands:
-  test                              Always run pytest in project .venv (auto-create). If pytest missing, auto-install.
+  test [pytest-args...]             Always run pytest in project .venv (auto-create). If pytest missing, auto-install.
   purge                             Remove temp/build files (.venv, build, dist, caches, *.egg-info, _version.py)
   reinstall-system [pip-args...]    Reinstall into SYSTEM Python. Pass extra args to 'pip install'. No purge.
                                     Examples:

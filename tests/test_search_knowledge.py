@@ -3,14 +3,12 @@ import os
 import sys
 import unittest
 
-# Insert src root directory to sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ragflow_knowledge_mcp_server.logger import get_logger
-
-from ragflow_knowledge_mcp_server.service import search_knowledge
-from ragflow_knowledge_mcp_server.properties import MCPServerProperties
-from ragflow_knowledge_mcp_server.ragflow import get_api
+from src.ragflow_knowledge_mcp_server.logger import get_logger
+from src.ragflow_knowledge_mcp_server.service import search_knowledge
+from src.ragflow_knowledge_mcp_server.properties import MCPServerProperties
+from src.ragflow_knowledge_mcp_server.ragflow import get_api
 
 
 class TestSearchKnowledge(unittest.TestCase):
@@ -18,10 +16,11 @@ class TestSearchKnowledge(unittest.TestCase):
         log = get_logger()
         log.setLevel("DEBUG")
 
-        if False:
+        if os.environ.get("RAGFLOW_SAMPLE_KNOWLEDGE_TEST_ENABLED") == "True":
             api = get_api()
             properties = MCPServerProperties()
-            properties.load(os.path.join(os.path.expanduser("~"), ".config", "ragflow-knowledge-mcp-server", "config-stdio.yaml"))
+            properties.load(
+                os.path.join(os.path.expanduser("~"), ".config", "ragflow-knowledge-mcp-server", "config-stdio.yaml"))
 
             # Call the function and check the result
             result = asyncio.run(search_knowledge(properties=properties,

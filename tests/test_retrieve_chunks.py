@@ -3,11 +3,10 @@ import os
 import sys
 import unittest
 
-# Insert src root directory to sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ragflow_knowledge_mcp_server.ragflow import RAGFlowKnowledgeAPI
-from ragflow_knowledge_mcp_server.logger import get_logger
+from src.ragflow_knowledge_mcp_server.ragflow import RAGFlowKnowledgeAPI
+from src.ragflow_knowledge_mcp_server.logger import get_logger
 
 
 class TestRetrieveChunks(unittest.TestCase):

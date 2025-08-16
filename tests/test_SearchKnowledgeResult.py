@@ -2,10 +2,9 @@ import os
 import sys
 import unittest
 
-# Insert src root directory to sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ragflow_knowledge_mcp_server.schema.search_knowledge_types import SearchKnowledgeResult, Knowledge
+from src.ragflow_knowledge_mcp_server.schema.search_knowledge_types import SearchKnowledgeResult, Knowledge
 
 
 class TestSearchKnowledgeResult(unittest.TestCase):

@@ -96,17 +96,15 @@ class MCPServerProperties:
 
         log.info(f"Loading properties from {properties_path}.")
 
-        # Read the properties from the yaml file
         try:
             import yaml
 
             with open(properties_path, 'r', encoding='utf-8') as file:
                 properties = yaml.safe_load(file)
 
-            # Extract properties from the loaded YAML
             if properties is None:
                 log.warning(f"Properties file {properties_path} is empty.")
-                return
+                properties = {}
 
             # Convert hyphen to underscore in keys
             properties_tmp = {}
